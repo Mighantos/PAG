@@ -1,5 +1,6 @@
 # PAG
-*using KaTeX*
+
+*using KaTeX (use your own MD editor/viewer like VS Code as GitHub finds \* in KaTeX and does italic)*
 
 - [PAG](#pag)
 - [**Analytics**](#analytics)
@@ -36,6 +37,8 @@
 	- [2-D Partitioning](#2-d-partitioning-1)
 	- [Cannon's Algorithm](#cannons-algorithm)
 	- [DNS Algorithm](#dns-algorithm)
+- [**System of Linear Equations**](#system-of-linear-equations)
+	- [Gaussian Elimination](#gaussian-elimination)
 
 # [**Analytics**](#pag)
 
@@ -163,7 +166,7 @@ Non-uniform message size! (we have 2 sizes of messages)
 1. We send in one axis same as on Ring => $(t_s+t_wm)*(\sqrt{p}-1)$
 2. We send in the other axes with the enlarged message => $(t_s+t_wm\sqrt{p})*(\sqrt{p}-1)$
 
-$(t_s+t_wm)*(\sqrt{p}-1)+(t_s+t_wm\sqrt{p})*(\sqrt{p}-1)=2t_s*(\sqrt{p}-1)+(t_wm(\sqrt{p}+1))*(\sqrt{p}-1)=$
+$(t_s+t_wm)*(\sqrt{p}-1)+(t_s+t_wm*\sqrt{p})*(\sqrt{p}-1)=2t_s*(\sqrt{p}-1)+(t_wm*(\sqrt{p}+1))*(\sqrt{p}-1)=$
 
 $=2t_s*(\sqrt{p}-1)+t_wm(p+\sqrt{p})-t_wm(\sqrt{p}+1)=2t_s*(\sqrt{p}-1)+t_wm*(p-1)$
 
@@ -574,7 +577,7 @@ $O(T_{all})=O(n^3)=W$ algorithm is cost-optimal
 
 $T_o=p*(\frac{n^3}{p}+t_s\log{p}+t_w\frac{n^2}{p^\frac{2}{3}}\log{p})-W=n^3+t_sp\log{p}+t_wp\frac{n^2}{p^\frac{2}{3}}\log{p}-n^3=t_sp\log{p}+t_w\sqrt[3]pn^2\log{p}$
 
-Isoefficiency ($t_w$ expression is asymptotically bigger, because $$p\le n^3$$)
+Isoefficiency ($t_w$ expression is asymptotically bigger, because $p\le n^3$)
 
 $W=O(n^3)=O(\sqrt[3]pn^2\log{p})~~~/\div n^2$
 
@@ -604,6 +607,47 @@ $O(n^3)=O(p\log^3{n})~~~/\div\log^3{p}$
 $O(\frac{n^3}{\log^3{n}})=O(p)$
 
 $O(p)=O(\frac{n^3}{\log^3{n}})$
+
+</details>
+
+</details>
+
+# [**System of Linear Equations**](#pag)
+
+<details open><summary>collapse</summary></br>
+
+Consider the problem of solving linear equations of the
+kind. Written as $Ax=b$, where $A$ is matrix $n\times n$ and are vectors $x$ and $b$ long $n$.
+
+$~~a_{0,0}x_0~~+~~a_{0,1}x_1~+\dots +~~a_{0,n-1}x_{n-1}~~=~b_0$
+
+$~~a_{1,0}x_0~~+~~a_{1,1}x_1~+\dots+~~a_{0,n-1}x_{n-1}~~=~b_1$
+
+$~~~~~~~\vdots~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~\vdots$
+
+$a_{n-1,0}x_0+a_{n-1,1}x_1+\dots+a_{n-1,n-1}x_{n-1}=b_{n-1}$
+
+Reference algorithm $W=\frac{n^3}{3}=O(n^3)$
+
+## Gaussian Elimination
+
+---
+
+<details open><summary>collapse</summary></br>
+
+We have $p\le n$ processors.
+
+We are going to use pipelined execution as it is the fastest with 1-D blocks indexed by $k$ with $\frac{n}{p}$ lines.
+
+1. We do normalization of first block $k=0$ => $n*\frac{n}{p}$
+2. We communicate the normalized vectors to the next block => $t_s+t_wn*\frac{n}{p}$
+3. We do normalization on this next block while previous block eliminates => $n*\frac{n}{p}$
+4. We repeat point 2 and 3 $n-1$ times
+5. We eliminate last block => $n*\frac{n}{p}$
+
+$T_p=n*\frac{n}{p}+2*(n-1)*(t_s+t_wn*\frac{n}{p})+n*\frac{n}{p}=2*\frac{n^2}{p}+(2n-2)*(t_s+t_w\frac{n^2}{p})=2*\frac{n^2}{p}+2nt_s+2t_w\frac{n^3}{p}-2t_s-2t_w\frac{n^2}{p}=O(\frac{n^3}{p})$
+
+$O(T_{all})=O(n^3)=W$ algorithm is cost-optimal
 
 </details>
 
