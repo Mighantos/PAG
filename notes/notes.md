@@ -39,6 +39,12 @@
 	- [DNS Algorithm](#dns-algorithm)
 - [**System of Linear Equations**](#system-of-linear-equations)
 	- [Gaussian Elimination](#gaussian-elimination)
+- [**Sorting Algorithms**](#sorting-algorithms)
+	- [Bitonic Sort](#bitonic-sort)
+	- [Odd-Even Transposition](#odd-even-transposition)
+	- [Shellsort](#shellsort)
+	- [Quicksort](#quicksort)
+	- [Enumeration Sort](#enumeration-sort)
 
 # [**Analytics**](#pag)
 
@@ -648,6 +654,203 @@ We are going to use pipelined execution as it is the fastest with 1-D blocks ind
 $T_p=n*\frac{n}{p}+2*(n-1)*(t_s+t_wn*\frac{n}{p})+n*\frac{n}{p}=2*\frac{n^2}{p}+(2n-2)*(t_s+t_w\frac{n^2}{p})=2*\frac{n^2}{p}+2nt_s+2t_w\frac{n^3}{p}-2t_s-2t_w\frac{n^2}{p}=O(\frac{n^3}{p})$
 
 $O(T_{all})=O(n^3)=W$ algorithm is cost-optimal
+
+</details>
+
+</details>
+
+# [**Sorting Algorithms**](#pag)
+
+<details open><summary>collapse</summary></br>
+
+We assume that the input and output lists are distributed.
+
+The sorted list is partitioned with the property that each partitioned list is sorted and each element in processor $P_i$'s list is less than that in $P_j$'s list if $i < j$.
+
+## Bitonic Sort
+
+---
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n\log^2n)$
+
+We have $p=n$ processors.
+
+We need to create a Bitonic sequence (increasing and decreasing or vice versa sequence) and then we sort.
+
+1. Create a Bitonic sequence => $(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}$
+   1. we have $j$ steps
+   2. in each step we do compare exchange between $i$ processor and $i XOR 2^j$
+   3. in each level $j$ going from $1$ to $\log n-1$
+2. We we sort by compare exchange between $i$ processor and $i XOR 2^j$ where $j$ is the level going from $\log n-1$ to $0$ => $\log n*(t_s+t_w)$
+
+![img/sort-bitonic-sequence.png](img/sort-bitonic-sequence.png)
+![img/sort-bitonic-sorting.png](img/sort-bitonic-sorting.png)
+
+$T_p=(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}+\log n*(t_s+t_w)=(t_s+t_w)*\frac{\log{n}(1+\log{n}-1)}{2}+t_s\log n+t_w\log n=(t_s+t_w)*\frac{\log^2{n}}{2}+t_s\log n+t_w\log n=O(\log^2n)$
+
+$O(T_{all})=O(n\log^2n)=W$ algorithm is cost-optimal
+
+If we have $p\lt n$ meaning $\frac{n}{p}$ data on processor.
+
+1. Local sort => $\frac{n}{p}\log\frac{n}{p}$
+2. Create a Bitonic sequence => $(t_s+t_w\frac{n}{p})*\sum_{i=1}^{\log{p}-1}{i}=O(\frac{n}{p}\log^2 p)$
+3. Sort => $(t_s+t_w\frac{n}{p})*\log p=O(\frac{n}{p}\log p)$
+
+$T_p=O(\frac{n}{p}\log\frac{n}{p})+O(\frac{n}{p}\log^2 p)+O(\frac{n}{p}\log p)$
+
+$O(T_{all})=O(n\log^2p)=W$ algorithm is cost-optimal as $p\lt n$
+
+$T_o=p*(O(\frac{n}{p}\log^2 p)+O(\frac{n}{p}\log\frac{n}{p})+O(\frac{n}{p}\log p))-W=O(n\log^2 p)+O(n\log\frac{n}{p})+O(n\log p)-O(n\log^2 n)=O(n\log\frac{n}{p})+O(n\log p)$
+
+Isoefficiency
+
+$W=O(p^{\log p}\log^2p)$
+
+Max num. of processors (cost-optimally)
+
+$p=O(2^{\sqrt{\log n}})$
+
+</details>
+
+## Odd-Even Transposition
+
+---
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n\log n)$
+
+We have $p\le n$ processors.
+
+We start with $\frac{n}{p}$ data on each processor.
+
+1. We do local sort => $\frac{n}{p}\log\frac{n}{p}$
+2. We do odd-even transposition in parallel and compare => $t_s+t_w\frac{n}{p}+\frac{n}{p}$
+3. We do step 2 $p$ times to sort the numbers => $p$
+
+![img/sort-odd-even.png](img/sort-odd-even.png)
+
+$T_P=\frac{n}{p}\log\frac{n}{p}+p*(t_s+t_w\frac{n}{p}+\frac{n}{p})=\frac{n}{p}\log\frac{n}{p}+t_sp+t_wn+n=O(\frac{n}{p}\log\frac{n}{p})$
+
+$O(T_{all})=O(n\log\frac{n}{p})=W$ algorithm is **cost-optimal** as $p\le n$
+
+$T_o=p*(\frac{n}{p}\log\frac{n}{p}+t_sp+t_wn+n)-W=n\log\frac{n}{p}+t_sp^2+t_wnp+np-W=t_sp^2+t_wnp+np= O(p^2+np+np)$
+
+
+<div style="float: right">
+Substitution
+
+$W=O(np)$
+
+$O(n\log n)=O(np)~~~/\div n$
+
+$O(\log{n})=O(p)$
+
+</div>
+Isoefficiency
+
+$W=O(np)$
+
+$W=O(2^{\log n}p)~~~/$ substitute
+
+$W=O(p2^p)$
+
+Max num. of processors (cost-optimally) 
+
+$p=O(\log n)$ (from substitution)
+
+</details>
+
+</details>
+
+## Shellsort
+
+---
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n\log n)$
+
+We have $p\le n$ processors.
+
+We start with $\frac{n}{p}$ data o each processor.
+
+1. We do local sort => $\frac{n}{p}\log\frac{n}{p}$
+2. We do compare split in parallel => $t_s+t_w\frac{n}{p}+\frac{n}{p}=O(\frac{n}{p})$
+3. We do step 2 $\log p$ times to sort the numbers => $\log p$
+4. Lastly we do odd-even transposition till we don't change anything => $l*(t_s+t_w\frac{n}{p}+\frac{n}{p})=O(l\frac{n}{p})$
+
+![img/sort-shellsort.png](img/sort-shellsort.png)
+
+$T_P=\frac{n}{p}\log\frac{n}{p}+O(\frac{n}{p}\log p)+O(l\frac{n}{p})$ 
+
+$O(T_{all})=O(n\log\frac{n}{p})=W$ algorithm is **cost-optimal** as $p\le n$
+
+Shellsort is faster than Odd-Even Transposition if $l$ is small, but If $l$ is $\theta(p)$ it is the same.
+
+</details>
+
+## Quicksort
+
+---
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n\log n)$
+
+We have $p\le n$ processors.
+
+We start with $\frac{n}{p}$ data assigned to processor in Shared Address Space.
+
+1. One processor selects a pivot and shares it with others => $(t_s+t_w)*\log p=O(\log p)$
+2. Each processor partitions its list in two (lower and upper from pivot) => $\frac{n}{p}$ compares
+3. Each processor determine his starting position to start write (local sum + prefix-sum) => $\frac{n}{p}+(t_s+t_w)*\log p=O(\frac{n}{p}+\log p)$
+4. We merge all lower and then upper lists => $2*\frac{n}{p}$
+5. We reassign the processors to lower or upper parts of shared space, dividing them to two groups, and each group goes to step 1 => $O(\log p)$ times
+6. Each processor sorts its final array => $O(\frac{n}{p}\log\frac{n}{p})$
+
+![img/sort-quicksort.png](img/sort-quicksort.png)
+
+$T_P=O(\frac{n}{p}\log\frac{n}{p})+\log p*(O(\frac{n}{p}+\log p))=O(\frac{n}{p}\log\frac{n}{p})+O(\frac{n}{p}\log p)+O(\log^2 p)$ 
+
+$O(T_{all})=O(n\log\frac{n}{p})=W$ algorithm is **cost-optimal** as $p\le n$
+
+$T_o=p*(O(\frac{n}{p}\log\frac{n}{p})+O(\frac{n}{p}\log p)+O(\log^2 p))-W=O(n\log\frac{n}{p})+O(n\log p)+O(p\log^2 p)-W=O(n\log p)+O(p\log^2 p)$
+
+Isoefficiency
+
+$W=O(p\log^2 p)$
+
+</details>
+
+## Enumeration Sort
+
+---
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n\log n)$
+
+We have $p=n^2$ processors in grid $n\times n$ indexed as $p_{i,j}$ where $i$ is row index and $j$ is column index.
+
+We consider CRCW (concurrent read, concurrent write) PRAM with SUM aggregation on write.
+
+Input $a$ vector.
+
+1. Every processor in a row knows $i^{th}$ number of input array $a_i$
+2. Every processor in a column knows $j^{th}$ number of input array $a_j$
+3. Calculating rank (how many number from input are smaller than number on processor)
+   1. We create a new array of size $|a|$ called $b$
+   2. Each processor $p_{i,j}$ writes $1$ to $b_j$ if $a_i<a_j$
+4. Each processor $p_{1,j}$ places its number $a_j$ to output array on index $b_j$
+
+(Numbers in cells are $a_j;a_j$)
+
+![img/sort-enumeration.png](img/sort-enumeration.png)
+
+$T_P=O(1)$
 
 </details>
 
