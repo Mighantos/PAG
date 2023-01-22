@@ -45,6 +45,7 @@
 	- [Shellsort](#shellsort)
 	- [Quicksort](#quicksort)
 	- [Enumeration Sort](#enumeration-sort)
+- [**Search Algorithms for Discrete Optimization Problems**](#search-algorithms-for-discrete-optimization-problems)
 
 # [**Analytics**](#pag)
 
@@ -80,7 +81,6 @@
 - $T_o(W,p)=O(pT_P-W)$ - asymptotic overhead from reference serial algorithm
 - $K=\frac{E}{1-E}$ - constant depending on efficiency
 - $W=KT_o(W,p)$ - isoefficiency function (rate at which the problem size must increase with respect to the number of processing elements to keep the efficiency)
-- 
 - Super-linear speedups - we do less work to find the solution thanks to parallelization => better speedup than possible
 - Sub-linear speedups - we do more work to find the solution thanks to parallelization => worse speedup than anticipated
 - Geometric progression: $\sum_{i=1}^{n}{q^{i}}=a_1\frac{1-q^n}{1-q}$
@@ -853,5 +853,26 @@ Input $a$ vector.
 $T_P=O(1)$
 
 </details>
+
+</details>
+
+# [**Search Algorithms for Discrete Optimization Problems**](#pag)
+
+<details open><summary>collapse</summary></br>
+
+Depth-First Search (DFS) - from init state you generate another state and recursively do the same thing in that generated state, if there is no more states to generate return to previous state and generates another one from that one.
+
+Depth-First Branch-and-Bound (DFBB) -  DFS but does not explore paths that are guaranteed to lead to solutions worse than current best solution
+
+Best-First Search (BFS) - similar to DFS, when generating next stat you generate all possible and pick the best one by some heuristic
+
+When parallelazing these searches you need to solve:
+
+- how to delegate work to other processors (Dynamic Load Balancing)
+  - request work from - Global round robin, Asynchronous round robin, Random polling (best)
+  - work splitting - node splitting (send nodes near the bottom), stack splitting (some nodes from each level)
+- how to find out you ended
+  - Dijkstra's Token Termination Detection
+  - Tree-Based Termination Detection
 
 </details>
