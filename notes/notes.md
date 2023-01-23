@@ -46,6 +46,17 @@
 	- [Quicksort](#quicksort)
 	- [Enumeration Sort](#enumeration-sort)
 - [**Search Algorithms for Discrete Optimization Problems**](#search-algorithms-for-discrete-optimization-problems)
+- [**Graph Algorithms**](#graph-algorithms)
+	- [Minimum Spanning Tree: Prim's algorithm](#minimum-spanning-tree-prims-algorithm)
+	- [Single-Source Shortest Paths: Parallel Dijkstra's Algorithm](#single-source-shortest-paths-parallel-dijkstras-algorithm)
+	- [All-Pairs Shortest Paths](#all-pairs-shortest-paths)
+		- [**Matrix-Multiplication Based Algorithm**](#matrix-multiplication-based-algorithm)
+		- [**Dijkstra's Algorithm: Source Partitioned**](#dijkstras-algorithm-source-partitioned)
+		- [**Dijkstra's Algorithm: Source Parallel**](#dijkstras-algorithm-source-parallel)
+		- [**Floyd's Algorithm: 2-D partitioning**](#floyds-algorithm-2-d-partitioning)
+		- [**Floyd's Algorithm: 2-D partitioning pipelined**](#floyds-algorithm-2-d-partitioning-pipelined)
+	- [Connected Components](#connected-components)
+	- [Minimal independent set (MIS)](#minimal-independent-set-mis)
 
 # [**Analytics**](#pag)
 
@@ -688,23 +699,27 @@ We need to create a Bitonic sequence (increasing and decreasing or vice versa se
 ![img/sort-bitonic-sequence.png](img/sort-bitonic-sequence.png)
 ![img/sort-bitonic-sorting.png](img/sort-bitonic-sorting.png)
 
-$T_p=(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}+\log n*(t_s+t_w)=(t_s+t_w)*\sum_{i=1}^{\log{n}}{i}=(t_s+t_w)*\frac{\log{n}(1+\log{n})}{2}=(t_s+t_w)*\frac{\log{n}+\log^2{n}}{2}=O(\log^2n)$
+$T_p=(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}+\log n*(t_s+t_w)=(t_s+t_w)*\sum_{i=1}^{\log{n}}{i}=(t_s+t_w)*\frac{\log{n}(1+\log{n})}{2}=(t_s+t_w)*\frac{\log{n}+\log^2{n}}{2}=O(\log^2n)+O(\log{n})$
 
 $O(T_{all})=O(n\log^2n)=W$ algorithm is cost-optimal
 
 If we have $p\lt n$ meaning $\frac{n}{p}$ data on processor.
 
 1. Local sort => $\frac{n}{p}\log\frac{n}{p}$
-2. Create a Bitonic sequence => $(t_s+t_w\frac{n}{p})*\sum_{i=1}^{\log{p}-1}{i}=O(\frac{n}{p}\log^2 p)$
-3. Sort => $(t_s+t_w\frac{n}{p})*\log p=O(\frac{n}{p}\log p)$
+2. Create a Bitonic sequence (communication and compare) => $(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}-1}{i}$
+3. Sort (communication and compare) => $(t_s+t_w\frac{n}{p}+\frac{n}{p})*\log p$
 
-$T_p=O(\frac{n}{p}\log\frac{n}{p})+O(\frac{n}{p}\log^2 p)+O(\frac{n}{p}\log p)$
+$T_p=(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}-1}{i}+(t_s+t_w\frac{n}{p}+\frac{n}{p})*\log p=(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}}{i}=O(\frac{n}{p}\log^2p)+O(\frac{n}{p}\log{p})$
 
 $O(T_{all})=O(n\log^2p)=W$ algorithm is cost-optimal as $p\lt n$
 
-$T_o=p*(O(\frac{n}{p}\log^2 p)+O(\frac{n}{p}\log\frac{n}{p})+O(\frac{n}{p}\log p))-W=O(n\log^2 p)+O(n\log\frac{n}{p})+O(n\log p)-O(n\log^2 n)=O(n\log\frac{n}{p})+O(n\log p)$
+$T_o=p*(O(\frac{n}{p}\log^2 p)+O(\frac{n}{p}\log p))-W=O(n\log^2 p)+O(n\log p)-O(n\log^2 n)=O(n\log p)$
 
 Isoefficiency
+
+$W=O(n\log^2n)=O(n\log p)~~~/\div n$
+
+$O(\log^2n)=O(\log p)~~~/\div n$
 
 $W=O(p^{\log p}\log^2p)$
 
@@ -874,5 +889,298 @@ When parallelazing these searches you need to solve:
 - how to find out you ended
   - Dijkstra's Token Termination Detection
   - Tree-Based Termination Detection
+
+</details>
+
+# [**Graph Algorithms**](#pag)
+
+<details open><summary>collapse</summary></br>
+
+## Minimum Spanning Tree: Prim's algorithm
+
+---
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n^2)$
+
+$n$ is number of vertices, using adjacency matrix $n\times n$, 1-D partitioning, $\frac{n}{p}$ data on each processor
+
+1. Each processor selects the locally closest node => $\frac{n}{p}$
+2. All-to-one reduction and select globally closest node => $(t_s+t_w)*\log p+\log p=O(\log p)$
+3. One-to-all broadcast to propagate the new $d$ vector => $(t_s+t_w)*\log p=O(\log p)$
+4. Each processor updates its part of the $d$ vector locally => $\frac{n}{p}$
+5. Step 1,2, and 3 is repeated $n$ times => $n$
+
+$T_P=n*(O(\log p)+\frac{n}{p})=O(n\log p)+O(\frac{n^2}{p})$
+
+$O(T_{all})=O(n^2)=W$
+
+$T_o=p*(O(n\log p)+O(\frac{n^2}{p}))-W=O(np\log p)+O(n^2)-W=O(np\log p)$
+
+Isoefficiency
+
+$W=O(n^2)=O(np\log p)~~~/\div n$
+
+$W=O(n)=O(p\log p)~~~/^2$
+
+$W=O(p^2\log^2 p)$
+
+<div style="float: right">
+Substitution
+
+$O(n)=O(p\log p)~~~/\log$
+
+$O(\log n)=O(\log{p}+\log\log p)~~~/ O(\log\log p)<O(\log{p})$
+
+$O(\log n)=O(\log{p})$
+
+</div>
+
+Max num. of processors (cost-optimally) 
+
+$O(n)=O(p\log p)~~~/$ substitute
+
+$O(n)=O(p\log n)~~~/\div \log n$
+
+$O(\frac{n}{\log n})=O(p)$
+
+$p=O(\frac{n}{\log n})$
+
+</details>
+
+## Single-Source Shortest Paths: Parallel Dijkstra's Algorithm
+
+---
+
+<details open><summary>collapse</summary></br>
+
+**It is the same as Prim**
+
+Reference algorithm $W=O(n^2)$
+
+$n$ is number of vertices, using adjacency matrix $n\times n$, 1-D partitioning, $\frac{n}{p}$ data on each processor
+
+1. Each processor selects the locally closest node => $\frac{n}{p}$
+2. All-to-one reduction and select globally closest node => $(t_s+t_w)*\log p+\log p=O(\log p)$
+3. One-to-all broadcast to propagate the new $d$ vector => $(t_s+t_w)*\log p=O(\log p)$
+4. Each processor updates its part of the $d$ vector locally => $\frac{n}{p}$
+5. Step 1,2, and 3 is repeated $n$ times => $n$
+
+$T_P=n*(O(\log p)+\frac{n}{p})=O(n\log p)+O(\frac{n^2}{p})$
+
+$O(T_{all})=O(n^2)=W$
+
+$T_o=p*(O(n\log p)+O(\frac{n^2}{p}))-W=O(np\log p)+O(n^2)-W=O(np\log p)$
+
+Isoefficiency
+
+$W=O(n^2)=O(np\log p)~~~/\div n$
+
+$W=O(n)=O(p\log p)~~~/^2$
+
+$W=O(p^2\log^2 p)$
+
+<div style="float: right">
+Substitution
+
+$O(n)=O(p\log p)~~~/\log$
+
+$O(\log n)=O(\log{p}+\log\log p)~~~/ O(\log\log p)<O(\log{p})$
+
+$O(\log n)=O(\log{p})$
+
+</div>
+
+Max num. of processors (cost-optimally) 
+
+$O(n)=O(p\log p)~~~/$ substitute
+
+$O(n)=O(p\log n)~~~/\div \log n$
+
+$O(\frac{n}{\log n})=O(p)$
+
+$p=O(\frac{n}{\log n})$
+
+</details>
+
+## All-Pairs Shortest Paths 
+
+---
+
+<details open><summary>collapse</summary></br>
+
+### **Matrix-Multiplication Based Algorithm**
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n^3)$
+
+Consider the multiplication of the weighted adjacency matrix with itself - except, in this case, we replace the multiplication operation in matrix multiplication by addition, and the addition operation by minimization.
+
+1. We do [matrix-matrix multiplication DNS](#dns-algorithm) => $O(\frac{n^3}{p})$
+2. We do step 1 $log n$ times as every multiplication
+
+$T_P=\log n*(O(\frac{n^3}{p}o)=O(\frac{n^3}{p}\log n)$
+
+$O(T_{all})=O(n^3\log n)\not = W$ not cost-optimal
+
+</details>
+
+### **Dijkstra's Algorithm: Source Partitioned**
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n^3)$
+
+We have $p\le n$.
+
+1. We run serial dijkstra for each vertex => $O(n^2)$
+2. As we potentially have $p\lt n$ we need to do step 1 $\frac{n}{p}$ serially
+
+$T_P=\frac{n}{p}O(n^2)=O(\frac{n^3}{p})$
+
+$O(T_{all})=O(n^3)=W$ is cost-optimal
+
+$T_o=p*(O(\frac{n^3}{p}))-W=O(n^3)-W=0$
+
+</details>
+
+### **Dijkstra's Algorithm: Source Parallel**
+
+<details open><summary>collapse</summary></br>
+
+Reference algorithm $W=O(n^3)$
+
+We have $p\lt n^2$.
+
+1. We run [single-source shortest paths parallel dijkstra](#single-source-shortest-paths-parallel-dijkstras-algorithm) for each vertex => $O(\sqrt p\log\sqrt{p})+O(\frac{n^2}{\sqrt p})=O(\sqrt p\log p)+O(\frac{n^2}{\sqrt p})$
+2. As we potentially have $\sqrt p\lt n$ we need to do step 1 $\frac{n}{\sqrt p}$ serially
+
+$T_P=\frac{n}{\sqrt p}(O(\sqrt p\log\sqrt{p})+O(\frac{n^2}{\sqrt p}))=O(n\log p)+O(\frac{n^3}{p})$
+
+$O(T_{all})=O(n^3)=W$ is cost-optimal
+
+$T_o=p*(O(n\log p)+O(\frac{n^3}{p}))-W=O(np\log p)+O(n^3)-W=O(np\log p)$
+
+Isoefficiency
+
+$W=O(n^3)=O(np\log p)~~~/\div n$
+
+$O(n^2)=O(p\log p)~~~/^\frac{3}{2}$
+
+$W=O(p^\frac{3}{2}\log^\frac{3}{2} p)$
+
+<div style="float: right">
+Substitution
+
+$O(n^2)=O(p\log p)~~~/\log$
+
+$O(\log n^2)=O(\log{p}+\log\log p)~~~/ O(\log\log p)<O(\log{p})$
+
+$O(\log n)=O(\log{p})$
+
+</div>
+
+Max num. of processors (cost-optimally) 
+
+$O(n^2)=O(p\log p)~~~/$ substitute
+
+$O(n^2)=O(p\log n)~~~/\div \log n$
+
+$O(\frac{n^2}{\log n})=O(p)$
+
+$O(p)=O(\frac{n^2}{\log n})$
+
+</details>
+
+### **Floyd's Algorithm: 2-D partitioning**
+
+<details open><summary>collapse</summary></br>
+
+We have $p\lt n^2$ with $\frac{n}{\sqrt p}\times\frac{n}{\sqrt p}$ of data on each.
+
+1. One-to-all broadcast on the same row and column => $2*(t_s+t_w\frac{n}{\sqrt p})*\log\sqrt{p}=O(\frac{n}{\sqrt p})\log p)$
+2. We synchronize => $O(\log p)$
+3. We need to calculate our block => $O(\frac{n^2}{p})$
+4. We need to do $n$ iterations of previous steps to get the result => $n$ times
+
+$T_P=n*(O(\frac{n^2}{p})+O(\frac{n}{\sqrt p}\log p))=O(\frac{n^3}{p})+O(\frac{n^2}{\sqrt p}\log p)$
+
+Isoefficiency
+
+$W=O(p^\frac{3}{2}\log^3 p)$
+
+Max num. of processors (cost-optimally) 
+
+$p=O(\frac{n^2}{\log^2 n})$
+
+</details>
+
+### **Floyd's Algorithm: 2-D partitioning pipelined**
+
+<details open><summary>collapse</summary></br>
+
+We have $p\lt n^2$ with $\frac{n}{\sqrt p}\times\frac{n}{\sqrt p}$ of data on each.
+
+1. Somehow we propagate data by pipelining => $?$
+2. We need to calculate our block => $O(\frac{n^2}{p})$
+3. We need to do $n$ iterations of previous steps to get the result => $n$ times
+4. But in this case we don't waste time waiting as we go in an cascade
+
+$T_P=n*(O(\frac{n^2}{p})+O(1)=O(\frac{n^3}{p})+O(n)$
+
+Isoefficiency
+
+$W=O(p^\frac{3}{2})$
+
+Max num. of processors (cost-optimally) 
+
+$p=O(n^2)$
+
+</details>
+
+</details>
+
+## Connected Components
+
+---
+
+<details open><summary>collapse</summary></br>
+
+Each processor have $\frac{n}{p}$ of lines of adjacency matrix.
+
+1. We do DFS to create forest on each processor => $O(\frac{n^2}{p})$
+2. We merge the results => $O(n\log p)$
+
+$T_P=O(\frac{n^2}{p})+O(n\log p)$
+
+![img/connected-components.png](img/connected-components.png)
+
+Isoefficiency
+
+$W=O(p^2\log^2 p)$
+
+Max num. of processors (cost-optimally) 
+
+$p=O(\frac{n}{\log n})$
+
+</details>
+
+## Minimal independent set (MIS)
+
+---
+
+<details open><summary>collapse</summary></br>
+
+We start with set $m$ of potential nodes for MIS.
+
+1. We generate random number on each node from $m$
+2. We look if any of our neighbor has a smaller number, if not we move this node to the MIS and remove all neighbors from $m$
+3. We repeat step 1 and 2 until $m$ is empty
+
+![img/minimal-independent-set.png](img/minimal-independent-set.png)
+
+</details>
 
 </details>
