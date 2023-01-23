@@ -688,7 +688,7 @@ We need to create a Bitonic sequence (increasing and decreasing or vice versa se
 ![img/sort-bitonic-sequence.png](img/sort-bitonic-sequence.png)
 ![img/sort-bitonic-sorting.png](img/sort-bitonic-sorting.png)
 
-$T_p=(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}+\log n*(t_s+t_w)=(t_s+t_w)*\frac{\log{n}(1+\log{n}-1)}{2}+t_s\log n+t_w\log n=(t_s+t_w)*\frac{\log^2{n}}{2}+t_s\log n+t_w\log n=O(\log^2n)$
+$T_p=(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}+\log n*(t_s+t_w)=(t_s+t_w)*\sum_{i=1}^{\log{n}}{i}=(t_s+t_w)*\frac{\log{n}(1+\log{n})}{2}=(t_s+t_w)*\frac{\log{n}+\log^2{n}}{2}=O(\log^2n)$
 
 $O(T_{all})=O(n\log^2n)=W$ algorithm is cost-optimal
 
