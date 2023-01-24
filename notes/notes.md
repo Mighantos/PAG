@@ -57,6 +57,7 @@
 		- [**Floyd's Algorithm: 2-D partitioning pipelined**](#floyds-algorithm-2-d-partitioning-pipelined)
 	- [Connected Components](#connected-components)
 	- [Minimal independent set (MIS)](#minimal-independent-set-mis)
+- [**Dynamic Programming**](#dynamic-programming)
 
 # [**Analytics**](#pag)
 
@@ -881,7 +882,7 @@ Depth-First Branch-and-Bound (DFBB) -  DFS but does not explore paths that are g
 
 Best-First Search (BFS) - similar to DFS, when generating next stat you generate all possible and pick the best one by some heuristic
 
-When parallelazing these searches you need to solve:
+When parallelizing these searches you need to solve:
 
 - how to delegate work to other processors (Dynamic Load Balancing)
   - request work from - Global round robin, Asynchronous round robin, Random polling (best)
@@ -908,7 +909,7 @@ $n$ is number of vertices, using adjacency matrix $n\times n$, 1-D partitioning,
 
 1. Each processor selects the locally closest node => $\frac{n}{p}$
 2. All-to-one reduction and select globally closest node => $(t_s+t_w)*\log p+\log p=O(\log p)$
-3. One-to-all broadcast to propagate the new $d$ vector => $(t_s+t_w)*\log p=O(\log p)$
+3. One-to-all broadcast to propagate the new added to MST vector => $(t_s+t_w)*\log p=O(\log p)$
 4. Each processor updates its part of the $d$ vector locally => $\frac{n}{p}$
 5. Step 1,2, and 3 is repeated $n$ times => $n$
 
@@ -963,7 +964,7 @@ $n$ is number of vertices, using adjacency matrix $n\times n$, 1-D partitioning,
 
 1. Each processor selects the locally closest node => $\frac{n}{p}$
 2. All-to-one reduction and select globally closest node => $(t_s+t_w)*\log p+\log p=O(\log p)$
-3. One-to-all broadcast to propagate the new $d$ vector => $(t_s+t_w)*\log p=O(\log p)$
+3. One-to-all broadcast to propagate the new node vector => $(t_s+t_w)*\log p=O(\log p)$
 4. Each processor updates its part of the $d$ vector locally => $\frac{n}{p}$
 5. Step 1,2, and 3 is repeated $n$ times => $n$
 
@@ -1123,12 +1124,12 @@ $p=O(\frac{n^2}{\log^2 n})$
 
 We have $p\lt n^2$ with $\frac{n}{\sqrt p}\times\frac{n}{\sqrt p}$ of data on each.
 
-1. Somehow we propagate data by pipelining => $?$
+1. Somehow we propagate data by pipelining => $O(1)$
 2. We need to calculate our block => $O(\frac{n^2}{p})$
 3. We need to do $n$ iterations of previous steps to get the result => $n$ times
 4. But in this case we don't waste time waiting as we go in an cascade
 
-$T_P=n*(O(\frac{n^2}{p})+O(1)=O(\frac{n^3}{p})+O(n)$
+$T_P=n*(O(\frac{n^2}{p})+O(1))=O(\frac{n^3}{p})+O(n)$
 
 Isoefficiency
 
@@ -1182,5 +1183,28 @@ We start with set $m$ of potential nodes for MIS.
 ![img/minimal-independent-set.png](img/minimal-independent-set.png)
 
 </details>
+
+</details>
+
+# [**Dynamic Programming**](#pag)
+
+<details open><summary>collapse</summary></br>
+
+- Monadic vs Polyadic
+  - Monadic is a problem with one recursive term (function)
+  - Polyadic has multiple recursive terms
+- Serial vs Non-serial
+  - Serial means the dependency graph of tasks can be separated to levels
+  - Non-serial is the opposite of Serial
+- We can combine these to: 
+  - serial-monadic - we calculate one problem using only the last stage result
+    - Shortest-Path Problem (Flow) => $O(rn)$ where $r$ is number of stages
+    - 0/1 Knapsack Problem => $O(n\log c)$ where $c$ is capacity
+  - non-serial-monadic - we calculate one problem in using multiple previous stages result
+    - LongestCommon-Subsequence => $2n-1=O(n)$ a lot of idling as we go diagonal by diagonal
+  - serial-polyadic - we calculate one of multiple problem using only the last stage result
+    - Floyd's All-Pairs Shortest Path
+  - non-serial-polyadic
+    - Optimal Matrix-Parenthesization Problem 
 
 </details>
