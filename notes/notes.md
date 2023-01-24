@@ -103,7 +103,7 @@
 
 *Base for all logarithms is 2, if not specified otherwise.*
 
-*I forget to write $K$ in every isoefficiency function calc, but you can add it by your self.*
+*I forget to write $K$ in every isoefficiency function calculation, but you can add it by yourself.*
 
 </details>
 
@@ -438,7 +438,7 @@ $p=O(n)$
 
 We have $p\le n^2$ processors.
 
-We start with the vector $x$ split that every processor in the last column having $n/\sqrt p$.
+We start with the vector $x$ split that every processor in the last column having $\frac{n}{\sqrt p}$.
 
 1. We move data to the right column => $t_s+t_w\frac{n}{\sqrt p}$
 2. We do one-to-all broadcast to spread the data in columns => $(t_s+t_w\frac{n}{\sqrt p})*\log(\sqrt p)$
