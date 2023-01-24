@@ -103,6 +103,8 @@
 
 *Base for all logarithms is 2, if not specified otherwise.*
 
+*I forget to write $K$ in every isoefficiency function calc, but you can add it by your self.*
+
 </details>
 
 # [**Communication**](#pag)
@@ -445,7 +447,7 @@ We start with the vector $x$ split that every processor in the last column havin
 
 ![img/matrix-vector-multiplication-2d.png](img/matrix-vector-multiplication-2d.png)
 
-$T_P=\frac{n^2}{p}+2*(t_s+t_w\frac{n}{\sqrt p})*\log\sqrt p+(t_s+t_w\frac{n}{\sqrt p})=\frac{n^2}{p}+(t_s+t_w\frac{n}{\sqrt p})*\log p\approx \frac{n^2}{p}+t_s\log p+t_w\frac{n}{\sqrt p}\log p$
+$T_P=\frac{n^2}{p}+2*(t_s+t_w\frac{n}{\sqrt p})*\log\sqrt p+(t_s+t_w\frac{n}{\sqrt p})=\frac{n^2}{p}+(t_s+t_w\frac{n}{\sqrt p})*\log\sqrt p\approx \frac{n^2}{p}+t_s\log\sqrt  p+t_w\frac{n}{\sqrt p}\log\sqrt  p=O(\frac{n^2}{p})+O(t_s\log p)+O(t_w\frac{n}{\sqrt p}\log p)$
 
 $O(T_{all})=O(n^2)=W$ algorithm is cost-optimal
 
@@ -557,7 +559,7 @@ $T_P=2*(t_s+t_w\frac{n^2}{p})+\frac{n}{\sqrt{p}}*\frac{n^2}{p}+(\sqrt{p}-1)*(2*(
 
 $O(T_{all})=O(n^3)=W$ algorithm is cost-optimal
 
-$T_o=p*(\frac{n^3}{p}+2t_s\sqrt{p}+2t_w\frac{n^2}{\sqrt{p}})-W=n^3+2t_sp\sqrt{p}+2t_wp\frac{n^2}{\sqrt{p}}-n^3=2t_sp^\frac{3}{2}+2t_w\sqrt{p}n^2$
+$T_o=p*(\frac{n^3}{p}+2t_s\sqrt{p}+2t_w\frac{n^2}{\sqrt{p}})-W=n^3+2t_sp\sqrt{p}+2t_wp\frac{n^2}{\sqrt{p}}-n^3=2t_sp^\frac{3}{2}+2t_wn^2$
 
 Isoefficiency ($t_w$ expression is asymptotically bigger, because $$p\le n^2$$) ($t_w$ expression is same as in 2-D Partitioning)
 
