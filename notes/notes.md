@@ -56,7 +56,7 @@
 		- [**Floyd's Algorithm: 2-D partitioning**](#floyds-algorithm-2-d-partitioning)
 		- [**Floyd's Algorithm: 2-D partitioning pipelined**](#floyds-algorithm-2-d-partitioning-pipelined)
 	- [Connected Components](#connected-components)
-	- [Minimal independent set (MIS)](#minimal-independent-set-mis)
+	- [Maximal independent set (MIS)](#maximal-independent-set-mis)
 - [**Dynamic Programming**](#dynamic-programming)
 - [**Fast Fourier Transform (FFT)**](#fast-fourier-transform-fft)
 	- [Cooley-Tukey algorithm](#cooley-tukey-algorithm)
@@ -1171,7 +1171,7 @@ $p=O(\frac{n}{\log n})$
 
 </details>
 
-## Minimal independent set (MIS)
+## Maximal independent set (MIS)
 
 ---
 
