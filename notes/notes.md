@@ -1246,11 +1246,11 @@ $T_P=t_c\frac{n}{p}\log\frac{n}{p}+\log p*(t_c\frac{n}{p}+t_s+t_w\frac{n}{p})=t_
 ---
 
 1. On each processor we do $2*\frac{\sqrt n}{2}$ additions of size $\frac{\sqrt n}{p}$ for $\log\sqrt n$ => $\frac{\sqrt n}{p}\sqrt n\log\sqrt n$
-2. We transpose with All-to-all personalized communication of $\frac{1}{p-1}*\frac{n}{p}$ message size => $(t_s+t_w\frac{1}{p-1}\frac{n}{p})*(p-1)$
+2. We transpose with All-to-all personalized communication of $\frac{1}{p}*\frac{n}{p}$ message size => $(t_s+t_w\frac{1}{p}\frac{n}{p})*(p-1)$
 3. After transposition we do 1 step again
 
 ![img/fft-transpose.png](img/fft-transpose.png)
 
-$T_P=2*\frac{\sqrt n}{p}\sqrt n\log\sqrt n+(t_s+t_w\frac{1}{p-1}\frac{\sqrt n}{p})*(p-1)=\frac{n}{p}\log n+t_s(p-1)+t_w\frac{n}{p}$
+$T_P=2*\frac{\sqrt n}{p}\sqrt n\log\sqrt n+(t_s+t_w\frac{1}{p}\frac{\sqrt n}{p})*(p-1)\approx\frac{n}{p}\log n+t_s(p-1)+t_w\frac{n}{p}$
 
 </details>
