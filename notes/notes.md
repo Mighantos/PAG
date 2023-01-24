@@ -58,6 +58,9 @@
 	- [Connected Components](#connected-components)
 	- [Minimal independent set (MIS)](#minimal-independent-set-mis)
 - [**Dynamic Programming**](#dynamic-programming)
+- [**Fast Fourier Transform (FFT)**](#fast-fourier-transform-fft)
+	- [Cooley-Tukey algorithm](#cooley-tukey-algorithm)
+	- [Transpose Algorithm](#transpose-algorithm)
 
 # [**Analytics**](#pag)
 
@@ -1206,5 +1209,46 @@ We start with set $m$ of potential nodes for MIS.
     - Floyd's All-Pairs Shortest Path
   - non-serial-polyadic
     - Optimal Matrix-Parenthesization Problem 
+
+</details>
+
+# [**Fast Fourier Transform (FFT)**](#pag)
+
+<details open><summary>collapse</summary></br>
+
+Decomposing signal to $\sin$ functions.
+
+![img/fft.png](img/fft.png)
+
+Fourier transform is $O(n^2)$ and Fast Fourier transform is faster by identifying common calculations done allowing recursion $O(n\log n)$.
+
+![img/fft-recursion.png](img/fft-recursion.png)
+
+![img/fft-recursion-graph.png](img/fft-recursion-graph.png)
+
+## Cooley-Tukey algorithm
+
+---
+
+1. We initially do $\frac{n}{p}\log\frac{n}{p}$ locally on processors
+2. In each stage receives data from $i XOR 2^{\log n-j}$ where $j$ is the stage id going from $1$ to $\log n$
+3. And in each stage we calculate => $\frac{n}{p}$
+4. We do $\log p$ stages
+
+![img/fft-Cooley-Tukey.png](img/fft-Cooley-Tukey.png)
+
+$T_P=t_c\frac{n}{p}\log\frac{n}{p}+\log p*(t_c\frac{n}{p}+t_s+t_w\frac{n}{p})=t_c\frac{n}{p}*(\log\frac{n}{p}+\log p)+t_s\log p+t_w\frac{n}{p}\log p=t_c\frac{n}{p}\log n+t_s\log p+t_w\frac{n}{p}\log p$
+
+## Transpose Algorithm
+
+---
+
+1. On each processor we do $2*\frac{\sqrt n}{2}$ additions of size $\frac{\sqrt n}{p}$ for $\log\sqrt n$ => $\frac{\sqrt n}{p}\sqrt n\log\sqrt n$
+2. We transpose with All-to-all personalized communication of $\frac{1}{p-1}*\frac{n}{p}$ message size => $(t_s+t_w\frac{1}{p-1}\frac{n}{p})*(p-1)$
+3. After transposition we do 1 step again
+
+![img/fft-transpose.png](img/fft-transpose.png)
+
+$T_P=2*\frac{\sqrt n}{p}\sqrt n\log\sqrt n+(t_s+t_w\frac{1}{p-1}\frac{\sqrt n}{p})*(p-1)=\frac{n}{p}\log n+t_s(p-1)+t_w\frac{n}{p}$
 
 </details>
