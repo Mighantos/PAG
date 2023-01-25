@@ -366,7 +366,7 @@ Result: $(t_s+t_wm)*\frac{p}{2}$
 Uniform message size!
 
 1. we shift every row for $q\bmod\sqrt{p}$ to align numbers to the right columns => max $\frac{\sqrt{p}}{2}$ steps
-2. we need to correct some some columns to still have a sequence, by shifting first $\max(0,(q\bmod\sqrt{p})-1)$ columns by one => one 1-to-1 communication
+2. we need to correct some some columns to still have a sequence, by shifting first $q\bmod\sqrt{p}$ columns by one => one 1-to-1 communication
 3. lastly we shift every column for $\lfloor q\div\sqrt{p}\rfloor$ to complete the circular shift => max $\frac{\sqrt{p}}{2}$ steps
 
 $(t_s+t_wm)*\frac{\sqrt{p}}{2}+(t_s+t_wm)+(t_s+t_wm)*\frac{\sqrt{p}}{2}=(t_s+t_wm)+2*(t_s+t_wm)*\frac{\sqrt{p}}{2}=(t_s+t_wm)*(\sqrt{p}+1)$
