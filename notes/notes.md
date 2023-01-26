@@ -961,7 +961,7 @@ $n$ is number of vertices, using adjacency matrix $n\times n$, 1-D partitioning,
 2. All-to-one reduction and select globally closest node => $(t_s+t_w)*\log p+\log p=O(\log p)$
 3. One-to-all broadcast to propagate the new added to MST vector => $(t_s+t_w)*\log p=O(\log p)$
 4. Each processor updates its part of the $d$ vector locally => $\frac{n}{p}$
-5. Step 1,2, and 3 is repeated $n$ times => $n$
+5. Step 1,2,3, and 4 is repeated $n$ times => $n$
 
 $T_P=n*(O(\log p)+\frac{n}{p})=O(n\log p)+O(\frac{n^2}{p})$
 
@@ -1016,7 +1016,7 @@ $n$ is number of vertices, using adjacency matrix $n\times n$, 1-D partitioning,
 2. All-to-one reduction and select globally closest node => $(t_s+t_w)*\log p+\log p=O(\log p)$
 3. One-to-all broadcast to propagate the new node vector => $(t_s+t_w)*\log p=O(\log p)$
 4. Each processor updates its part of the $d$ vector locally => $\frac{n}{p}$
-5. Step 1,2, and 3 is repeated $n$ times => $n$
+5. Step 1,2,3, and 4 is repeated $n$ times => $n$
 
 $T_P=n*(O(\log p)+\frac{n}{p})=O(n\log p)+O(\frac{n^2}{p})$
 
