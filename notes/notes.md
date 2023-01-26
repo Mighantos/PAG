@@ -707,7 +707,9 @@ We need to create a Bitonic sequence (increasing and decreasing or vice versa se
 
 $T_p=(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}+\log n*(t_s+t_w)=(t_s+t_w)*\sum_{i=1}^{\log{n}}{i}=(t_s+t_w)*\frac{\log{n}(1+\log{n})}{2}=(t_s+t_w)*\frac{\log{n}+\log^2{n}}{2}=O(\log^2n)+O(\log{n})$
 
-$O(T_{all})=O(n\log^2n)=W$ algorithm is cost-optimal
+$O(T_{all})=O(n\log^2n)=W$ algorithm is cost-optimal to the serial implementation of Bitonic sort but not to other sorts with $O(n\log n)$.
+
+Reference algorithm $W=O(n\log n)$
 
 If we have $p\lt n$ meaning $\frac{n}{p}$ data on processor.
 
@@ -715,21 +717,55 @@ If we have $p\lt n$ meaning $\frac{n}{p}$ data on processor.
 2. Create a Bitonic sequence (communication and compare) => $(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}-1}{i}$
 3. Sort (communication and compare) => $(t_s+t_w\frac{n}{p}+\frac{n}{p})*\log p$
 
-$T_p=(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}-1}{i}+(t_s+t_w\frac{n}{p}+\frac{n}{p})*\log p=(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}}{i}=O(\frac{n}{p}\log^2p)+O(\frac{n}{p}\log{p})$
+$T_p=\frac{n}{p}\log\frac{n}{p}+(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}-1}{i}+(t_s+t_w\frac{n}{p}+\frac{n}{p})*\log p=\frac{n}{p}\log\frac{n}{p}+(t_s+t_w\frac{n}{p}+\frac{n}{p})*\sum_{i=1}^{\log{p}}{i}=\frac{n}{p}\log n-\frac{n}{p}\log{p}+(t_s+t_w\frac{n}{p}+\frac{n}{p})*\frac{\log p*(1+\log p)}{2}=\frac{n}{p}\log n-\frac{n}{p}\log{p}+(t_s+t_w\frac{n}{p}+\frac{n}{p})*\frac{\log p+\log^2 p}{2}=O(\frac{n}{p}\log n)-O(\frac{n}{p}\log{p})+O(\log{p})+O(\log^2{p})+O(\frac{n}{p}\log{p})+O(\frac{n}{p}\log^2{p})=O(\frac{n}{p}\log n)+O(\log{p})+O(\log^2{p})+O(\frac{n}{p}\log^2{p})$
 
-$O(T_{all})=O(n\log^2p)=W$ algorithm is cost-optimal as $p\lt n$
+$O(T_{all})=O(n\log n)=W$ algorithm is cost-optimal
 
-$T_o=p*(O(\frac{n}{p}\log^2 p)+O(\frac{n}{p}\log p))-W=O(n\log^2 p)+O(n\log p)-O(n\log^2 n)=O(n\log p)$
+$T_o=p*(O(\frac{n}{p}\log n)+O(\log{p})+O(\log^2{p})+O(\frac{n}{p}\log^2 p))-W=O(n\log n)+O(p\log{p})+O(p\log^2{p})+O(n\log^2 p)-O(n\log n)=O(p\log{p})+O(p\log^2{p})+O(n\log^2 p)=O(n\log^2 p)$
+
+<div style="float: right">
+
+Substitution
+
+$W=O(n\log n)=O(n\log^2 p)~~~/\div n$
+
+$O(\log n)=O(\log^2 p)$
+
+</div>
 
 Isoefficiency
 
-$W=O(n\log^2n)=O(n\log p)~~~/\div n$
+$W=O(n\log n)=O(n\log^2 p)$
 
-$O(\log^2n)=O(\log p)~~~/\div n$
+$O(n\log n)=O(2^{\log n}\log^2 p)~~~/$ substitution
+
+$O(n\log n)=O(2^{\log^2 p}\log^2 p)$
+
+$O(n\log n)=O(p^{\log_p{2^{\log^2 p}}}\log^2 p)$
+
+$O(n\log n)=O(p^{\log^2 p\log_p{2}}\log^2 p)$
+
+$O(n\log n)=O(p^{\log p\log p\log_p{2}}\log^2 p)~~~/\log_2{p}\log_p{2}=1$
+
+$O(n\log n)=O(p^{\log p}\log^2 p)$
 
 $W=O(p^{\log p}\log^2p)$
 
 Max num. of processors (cost-optimally)
+
+$O(n\log n)=O(2^{\log^2 p}\log^2 p)~~~/$ substitution
+
+$O(n\log n)=O(2^{\log^2 p}\log n)~~~/\div\log n$
+
+$O(n)=O(2^{\log^2 p})$
+
+$O(2^{\log n})=O(2^{\log^2 p})~~~/$ compare exponents
+
+$O({\log n})=O({\log^2 p})~~~/\sqrt{}$
+
+$O({\sqrt{\log n}})=O({\log p})~~~~/$ back to exponents
+
+$O(2^{\sqrt{\log n}})=O(2^{\log p})$
 
 $p=O(2^{\sqrt{\log n}})$
 
@@ -757,7 +793,7 @@ $T_P=\frac{n}{p}\log\frac{n}{p}+p*(t_s+t_w\frac{n}{p}+\frac{n}{p})=\frac{n}{p}\l
 
 $O(T_{all})=O(n\log\frac{n}{p})=W$ algorithm is **cost-optimal** as $p\le n$
 
-$T_o=p*(\frac{n}{p}\log\frac{n}{p}+t_sp+t_wn+n)-W=n\log\frac{n}{p}+t_sp^2+t_wnp+np-W=t_sp^2+t_wnp+np= O(p^2+np+np)$
+$T_o=p*(\frac{n}{p}\log\frac{n}{p}+t_sp+t_wn+n)-W=n\log\frac{n}{p}+t_sp^2+t_wnp+np-W=t_sp^2+t_wnp+np=O(p^2+np+np)$
 
 
 <div style="float: right">
@@ -1210,7 +1246,7 @@ We start with set $m$ of potential nodes for MIS.
 - We can combine these to: 
   - serial-monadic - we calculate one problem using only the last stage result
     - Shortest-Path Problem (Flow) => $O(rn)$ where $r$ is number of stages
-    - 0/1 Knapsack Problem => $O(n\log c)$ where $c$ is capacity
+    - 0/1 Knapsack Problem => $O(n\frac{c}{p})$ where $c$ is capacity
   - non-serial-monadic - we calculate one problem in using multiple previous stages result
     - LongestCommon-Subsequence => $2n-1=O(n)$ a lot of idling as we go diagonal by diagonal
   - serial-polyadic - we calculate one of multiple problem using only the last stage result
