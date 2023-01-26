@@ -407,7 +407,7 @@ Reference serial algorithm $W=O(n^2)$
 
 We have $p\le n$ processors.
 
-We start with the vector $x$ split that every processor have $n/p$.
+We start with the vector $x$ split that every processor have $\frac{n}{p}$.
 
 1. We do all-to-all broadcast on every processor (to distribute the vector) => $t_s\log p+t_w\frac{n}{p}*(p-1)$
 2. we calculate => $\frac{n^2}{p}$ operations
@@ -559,7 +559,7 @@ $T_P=2*(t_s+t_w\frac{n^2}{p})+\frac{n}{\sqrt{p}}*\frac{n^2}{p}+(\sqrt{p}-1)*(2*(
 
 $O(T_{all})=O(n^3)=W$ algorithm is cost-optimal
 
-$T_o=p*(\frac{n^3}{p}+2t_s\sqrt{p}+2t_w\frac{n^2}{\sqrt{p}})-W=n^3+2t_sp\sqrt{p}+2t_wp\frac{n^2}{\sqrt{p}}-n^3=2t_sp^\frac{3}{2}+2t_wn^2$
+$T_o=p*(\frac{n^3}{p}+2t_s\sqrt{p}+2t_w\frac{n^2}{\sqrt{p}})-W=n^3+2t_sp\sqrt{p}+2t_wp\frac{n^2}{\sqrt{p}}-n^3=2t_sp^\frac{3}{2}+2t_w\sqrt pn^2$
 
 Isoefficiency ($t_w$ expression is asymptotically bigger, because $$p\le n^2$$) ($t_w$ expression is same as in 2-D Partitioning)
 
