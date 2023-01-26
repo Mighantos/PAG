@@ -382,7 +382,7 @@ Uniform message size!
 
 You just send point-to-point message from $i^{th}$ node to $(i+q)\bmod{p}$ => one 1-to-1 communication
 	
-Route is created by flipping bits of source id $i$ according to which bits need to be flipped to get target id, going from least significant bit to most significant (e.g. on 8 processors $i=7,q=2$ or in binary $i=111,q=110$ meaning target is $((7+2)\bmod{8})=1$. We go $111\to 101\to 001$ or $7\to 5\to 1$ as can be seen in the figure (b) 2-shift )
+Route is created by flipping bits of source id $i$ according to which bits need to be flipped to get target id, going from least significant bit to most significant (e.g. on 8 processors $i=7,q=2$ or in binary $i=111$ meaning target is $((7+2)\bmod{8})=1$ or in binary $001$. So we need to flip source $XOR$ target bits, that is $110$. We go $111\to 101\to 001$ or $7\to 5\to 1$ as can be seen in the figure (b) 2-shift )
 
 ![img/circular-shift-hypercube.png](img/circular-shift-hypercube.png)
 
