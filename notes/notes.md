@@ -41,6 +41,7 @@
 	- [Gaussian Elimination](#gaussian-elimination)
 - [**Sorting Algorithms**](#sorting-algorithms)
 	- [Bitonic Sort](#bitonic-sort)
+	- [Bitonic Sort (block partition)](#bitonic-sort-block-partition)
 	- [Odd-Even Transposition](#odd-even-transposition)
 	- [Shellsort](#shellsort)
 	- [Quicksort](#quicksort)
@@ -708,6 +709,14 @@ We need to create a Bitonic sequence (increasing and decreasing or vice versa se
 $T_p=(t_s+t_w)*\sum_{i=1}^{\log{n}-1}{i}+\log n*(t_s+t_w)=(t_s+t_w)*\sum_{i=1}^{\log{n}}{i}=(t_s+t_w)*\frac{\log{n}(1+\log{n})}{2}=(t_s+t_w)*\frac{\log{n}+\log^2{n}}{2}=O(\log^2n)+O(\log{n})$
 
 $O(T_{all})=O(n\log^2n)=W$ algorithm is cost-optimal to the serial implementation of Bitonic sort but not to other sorts with $O(n\log n)$.
+
+</details>
+
+## Bitonic Sort (block partition)
+
+---
+
+<details open><summary>collapse</summary></br>
 
 Reference algorithm $W=O(n\log n)$
 
