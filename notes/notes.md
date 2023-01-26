@@ -1180,12 +1180,12 @@ Reference algorithm $W=(n^3)$
 
 We have $p\lt n^2$ with $\frac{n}{\sqrt p}\times\frac{n}{\sqrt p}$ of data on each.
 
-1. Somehow we propagate data by pipelining => $O(1)$
-2. We need to calculate our block => $O(\frac{n^2}{p})$
-3. We need to do $n$ iterations of previous steps to get the result => $n$ times
-4. But in this case we don't waste time waiting as we go in an cascade
+1. We need to calculate our block => $O(\frac{n^2}{p})$
+2. We need to do $n$ iterations of the previous step to get the result => $n$ times
+3. After we do step 1 we send the data to the neighbor nodes => $O(\frac{n}{\sqrt p})$
+4. But this communication arrives to the last processor after $\sqrt p$ as it pipelines trough the processors
 
-$T_P=n*(O(\frac{n^2}{p})+O(1))=O(\frac{n^3}{p})+O(n)$
+$T_P=n*O(\frac{n^2}{p})+\sqrt p*O(\frac{n}{\sqrt p})=O(\frac{n^3}{p})+O(n)$
 
 Isoefficiency
 
