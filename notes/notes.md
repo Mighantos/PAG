@@ -1104,12 +1104,16 @@ $O(p)=O(\frac{n^2}{\log n})$
 
 <details open><summary>collapse</summary></br>
 
+Reference algorithm $W=(n^3)$
+
 We have $p\lt n^2$ with $\frac{n}{\sqrt p}\times\frac{n}{\sqrt p}$ of data on each.
 
 1. One-to-all broadcast on the same row and column => $2*(t_s+t_w\frac{n}{\sqrt p})*\log\sqrt{p}=O(\frac{n}{\sqrt p})\log p)$
 2. We synchronize => $O(\log p)$
 3. We need to calculate our block => $O(\frac{n^2}{p})$
 4. We need to do $n$ iterations of previous steps to get the result => $n$ times
+
+![img/floyd.png](img/floyd.png)
 
 $T_P=n*(O(\frac{n^2}{p})+O(\frac{n}{\sqrt p}\log p))=O(\frac{n^3}{p})+O(\frac{n^2}{\sqrt p}\log p)$
 
@@ -1126,6 +1130,8 @@ $p=O(\frac{n^2}{\log^2 n})$
 ### **Floyd's Algorithm: 2-D partitioning pipelined**
 
 <details open><summary>collapse</summary></br>
+
+Reference algorithm $W=(n^3)$
 
 We have $p\lt n^2$ with $\frac{n}{\sqrt p}\times\frac{n}{\sqrt p}$ of data on each.
 
