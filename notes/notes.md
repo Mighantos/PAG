@@ -520,7 +520,7 @@ $O(T_{all})=O(n^3)=W$ algorithm is cost-optimal
 
 $T_o=p*(\frac{n^3}{p}+t_s\log{p}+2*t_w\frac{n^2}{\sqrt p})-W=n^3+t_sp\log{p}+2*t_w\sqrt pn^2-n^3=t_sp\log{p}+2*t_w\sqrt pn^2$
 
-Isoefficiency ($t_w$ is asymptotically bigger, because $$p\le n^2$$)
+Isoefficiency ($t_w$ is asymptotically bigger, because $p\le n^2$)
 
 $W=O(n^3)=O(\sqrt pn^2)~~~/\div n^2$
 
@@ -562,7 +562,7 @@ $O(T_{all})=O(n^3)=W$ algorithm is cost-optimal
 
 $T_o=p*(\frac{n^3}{p}+2t_s\sqrt{p}+2t_w\frac{n^2}{\sqrt{p}})-W=n^3+2t_sp\sqrt{p}+2t_wp\frac{n^2}{\sqrt{p}}-n^3=2t_sp^\frac{3}{2}+2t_w\sqrt pn^2$
 
-Isoefficiency ($t_w$ expression is asymptotically bigger, because $$p\le n^2$$) ($t_w$ expression is same as in 2-D Partitioning)
+Isoefficiency ($t_w$ expression is asymptotically bigger, because $p\le n^2$) ($t_w$ expression is same as in 2-D Partitioning)
 
 $W=O(n^3)=O(\sqrt pn^2)~~~/\div n^2$
 
